@@ -26,9 +26,9 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 3.0.2'
 
   spec.add_dependency 'async' # Fiber-based reactor. Open-ended to allow Ruby 3.1+ to use v2
-  spec.add_dependency 'google-protobuf', '~> 3.21.1' # Protobuf
+  spec.add_dependency 'google-protobuf', '~> 3.23.3' # Protobuf
   spec.add_dependency 'rexml', '~> 3.2.5' # Implicitly required by thermite
-  spec.add_dependency 'rutie', '~> 0.0.4' # Rust bindings
+  spec.add_runtime_dependency 'rutie', '~> 0.0.4' # Rust bindings
   spec.add_dependency 'thermite', '~> 0.13.0' # For compiling Rust ext
 
   spec.add_development_dependency 'grpc' # Ruby GRPC for the mock server
@@ -36,12 +36,12 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'protobuf' # Ruby implementation of protobufs (for rbs_protobuf)
   spec.add_development_dependency 'pry' # Debugger
   spec.add_development_dependency 'rake' # rake tasks
-  spec.add_development_dependency 'rbs', '>= 2.8.0', '< 3.0.0' # RBS - steep 1.3.0 crashes with RBS 3.0.0
+  spec.add_development_dependency 'rbs', '~> 3.1.0'
   spec.add_development_dependency 'rbs_protobuf' # RBS generator for protobufs
   spec.add_development_dependency 'rspec' # specs
   spec.add_development_dependency 'rubocop' # linter
   spec.add_development_dependency 'rubocop-rspec' # spec linter
-  spec.add_development_dependency 'steep', '~> 1.3.0' # type checker
+  spec.add_development_dependency 'steep', '~> 1.4.0' # type checker
   spec.add_development_dependency 'typeprof' # type generator
   spec.add_development_dependency 'yard' # docs
 end
