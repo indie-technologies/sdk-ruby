@@ -10,6 +10,11 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       value :RESET_REAPPLY_TYPE_SIGNAL, 1
       value :RESET_REAPPLY_TYPE_NONE, 2
     end
+    add_enum "temporal.api.enums.v1.ResetType" do
+      value :RESET_TYPE_UNSPECIFIED, 0
+      value :RESET_TYPE_FIRST_WORKFLOW_TASK, 1
+      value :RESET_TYPE_LAST_WORKFLOW_TASK, 2
+    end
   end
 end
 
@@ -18,6 +23,7 @@ module Temporalio
     module Enums
       module V1
         ResetReapplyType = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.enums.v1.ResetReapplyType").enummodule
+        ResetType = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.enums.v1.ResetType").enummodule
       end
     end
   end

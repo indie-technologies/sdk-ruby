@@ -2,50 +2,50 @@ module Temporalio
   module Bridge
     module Api
       module WorkflowActivation
-        # / An instruction to the lang sdk to run some workflow code, whether for the first time or from
-        # / a cached state.
+        # An instruction to the lang sdk to run some workflow code, whether for the first time or from
+        #  a cached state.
         #
         class WorkflowActivation < ::Protobuf::Message
           # Encode the message to a binary string
           #
           def self.encode: (WorkflowActivation) -> String
 
-          # / The id of the currently active run of the workflow. Also used as a cache key. There may
-          # / only ever be one active workflow task (and hence activation) of a run at one time.
+          # The id of the currently active run of the workflow. Also used as a cache key. There may
+          #  only ever be one active workflow task (and hence activation) of a run at one time.
           #
           attr_accessor run_id(): ::String
 
           def run_id!: () -> ::String?
 
-          # / The current time as understood by the workflow, which is set by workflow task started events
+          # The current time as understood by the workflow, which is set by workflow task started events
           #
           attr_accessor timestamp(): ::Google::Protobuf::Timestamp?
 
-          # / The current time as understood by the workflow, which is set by workflow task started events
+          # The current time as understood by the workflow, which is set by workflow task started events
           #
           def timestamp=: [M < ::Google::Protobuf::Timestamp::_ToProto] (M?) -> M?
                         | ...
 
           def timestamp!: () -> ::Google::Protobuf::Timestamp?
 
-          # / Whether or not the activation is replaying past events
+          # Whether or not the activation is replaying past events
           #
           attr_accessor is_replaying(): bool
 
           def is_replaying!: () -> bool?
 
-          # / Current history length as determined by the event id of the most recently processed event.
-          # / This ensures that the number is always deterministic
+          # Current history length as determined by the event id of the most recently processed event.
+          #  This ensures that the number is always deterministic
           #
           attr_accessor history_length(): ::Integer
 
           def history_length!: () -> ::Integer?
 
-          # / The things to do upon activating the workflow
+          # The things to do upon activating the workflow
           #
           attr_accessor jobs(): ::Temporalio::Bridge::Api::WorkflowActivation::WorkflowActivationJob::field_array
 
-          # / The things to do upon activating the workflow
+          # The things to do upon activating the workflow
           #
           def jobs=: (::Temporalio::Bridge::Api::WorkflowActivation::WorkflowActivationJob::array) -> ::Temporalio::Bridge::Api::WorkflowActivation::WorkflowActivationJob::array
                    | ...
@@ -67,7 +67,19 @@ module Temporalio
 
           def available_internal_flags!: () -> ::Protobuf::field_array[::Integer]?
 
-          def initialize: (?run_id: ::String, ?timestamp: ::Google::Protobuf::Timestamp::init?, ?is_replaying: bool, ?history_length: ::Integer, ?jobs: ::Temporalio::Bridge::Api::WorkflowActivation::WorkflowActivationJob::array, ?available_internal_flags: ::Array[::Integer]) -> void
+          # The history size in bytes as of the last WFT started event
+          #
+          attr_accessor history_size_bytes(): ::Integer
+
+          def history_size_bytes!: () -> ::Integer?
+
+          # Set true if the most recent WFT started event had this suggestion
+          #
+          attr_accessor continue_as_new_suggested(): bool
+
+          def continue_as_new_suggested!: () -> bool?
+
+          def initialize: (?run_id: ::String, ?timestamp: ::Google::Protobuf::Timestamp::init?, ?is_replaying: bool, ?history_length: ::Integer, ?jobs: ::Temporalio::Bridge::Api::WorkflowActivation::WorkflowActivationJob::array, ?available_internal_flags: ::Array[::Integer], ?history_size_bytes: ::Integer, ?continue_as_new_suggested: bool) -> void
 
           def []: (:run_id) -> ::String
                 | (:timestamp) -> ::Google::Protobuf::Timestamp?
@@ -75,6 +87,8 @@ module Temporalio
                 | (:history_length) -> ::Integer
                 | (:jobs) -> ::Temporalio::Bridge::Api::WorkflowActivation::WorkflowActivationJob::field_array
                 | (:available_internal_flags) -> ::Protobuf::field_array[::Integer]
+                | (:history_size_bytes) -> ::Integer
+                | (:continue_as_new_suggested) -> bool
                 | (::Symbol) -> untyped
 
           def []=: (:run_id, ::String) -> ::String
@@ -86,9 +100,13 @@ module Temporalio
                  | (:jobs, ::Temporalio::Bridge::Api::WorkflowActivation::WorkflowActivationJob::array) -> ::Temporalio::Bridge::Api::WorkflowActivation::WorkflowActivationJob::array
                  | (:available_internal_flags, ::Protobuf::field_array[::Integer]) -> ::Protobuf::field_array[::Integer]
                  | (:available_internal_flags, ::Array[::Integer]) -> ::Array[::Integer]
+                 | (:history_size_bytes, ::Integer) -> ::Integer
+                 | (:continue_as_new_suggested, bool) -> bool
                  | (::Symbol, untyped) -> untyped
 
           def is_replaying?: () -> bool
+
+          def continue_as_new_suggested?: () -> bool
 
           interface _ToProto
             def to_proto: () -> WorkflowActivation
@@ -113,155 +131,155 @@ module Temporalio
           #
           def self.encode: (WorkflowActivationJob) -> String
 
-          # / Begin a workflow for the first time
+          # Begin a workflow for the first time
           #
           attr_accessor start_workflow(): ::Temporalio::Bridge::Api::WorkflowActivation::StartWorkflow?
 
-          # / Begin a workflow for the first time
+          # Begin a workflow for the first time
           #
           def start_workflow=: [M < ::Temporalio::Bridge::Api::WorkflowActivation::StartWorkflow::_ToProto] (M?) -> M?
                              | ...
 
           def start_workflow!: () -> ::Temporalio::Bridge::Api::WorkflowActivation::StartWorkflow?
 
-          # / A timer has fired, allowing whatever was waiting on it (if anything) to proceed
+          # A timer has fired, allowing whatever was waiting on it (if anything) to proceed
           #
           attr_accessor fire_timer(): ::Temporalio::Bridge::Api::WorkflowActivation::FireTimer?
 
-          # / A timer has fired, allowing whatever was waiting on it (if anything) to proceed
+          # A timer has fired, allowing whatever was waiting on it (if anything) to proceed
           #
           def fire_timer=: [M < ::Temporalio::Bridge::Api::WorkflowActivation::FireTimer::_ToProto] (M?) -> M?
                          | ...
 
           def fire_timer!: () -> ::Temporalio::Bridge::Api::WorkflowActivation::FireTimer?
 
-          # / Workflow was reset. The randomness seed must be updated.
+          # Workflow was reset. The randomness seed must be updated.
           #
           attr_accessor update_random_seed(): ::Temporalio::Bridge::Api::WorkflowActivation::UpdateRandomSeed?
 
-          # / Workflow was reset. The randomness seed must be updated.
+          # Workflow was reset. The randomness seed must be updated.
           #
           def update_random_seed=: [M < ::Temporalio::Bridge::Api::WorkflowActivation::UpdateRandomSeed::_ToProto] (M?) -> M?
                                  | ...
 
           def update_random_seed!: () -> ::Temporalio::Bridge::Api::WorkflowActivation::UpdateRandomSeed?
 
-          # / A request to query the workflow was received.
+          # A request to query the workflow was received.
           #
           attr_accessor query_workflow(): ::Temporalio::Bridge::Api::WorkflowActivation::QueryWorkflow?
 
-          # / A request to query the workflow was received.
+          # A request to query the workflow was received.
           #
           def query_workflow=: [M < ::Temporalio::Bridge::Api::WorkflowActivation::QueryWorkflow::_ToProto] (M?) -> M?
                              | ...
 
           def query_workflow!: () -> ::Temporalio::Bridge::Api::WorkflowActivation::QueryWorkflow?
 
-          # / A request to cancel the workflow was received.
+          # A request to cancel the workflow was received.
           #
           attr_accessor cancel_workflow(): ::Temporalio::Bridge::Api::WorkflowActivation::CancelWorkflow?
 
-          # / A request to cancel the workflow was received.
+          # A request to cancel the workflow was received.
           #
           def cancel_workflow=: [M < ::Temporalio::Bridge::Api::WorkflowActivation::CancelWorkflow::_ToProto] (M?) -> M?
                               | ...
 
           def cancel_workflow!: () -> ::Temporalio::Bridge::Api::WorkflowActivation::CancelWorkflow?
 
-          # / A request to signal the workflow was received.
+          # A request to signal the workflow was received.
           #
           attr_accessor signal_workflow(): ::Temporalio::Bridge::Api::WorkflowActivation::SignalWorkflow?
 
-          # / A request to signal the workflow was received.
+          # A request to signal the workflow was received.
           #
           def signal_workflow=: [M < ::Temporalio::Bridge::Api::WorkflowActivation::SignalWorkflow::_ToProto] (M?) -> M?
                               | ...
 
           def signal_workflow!: () -> ::Temporalio::Bridge::Api::WorkflowActivation::SignalWorkflow?
 
-          # / An activity was resolved, result could be completed, failed or cancelled
+          # An activity was resolved, result could be completed, failed or cancelled
           #
           attr_accessor resolve_activity(): ::Temporalio::Bridge::Api::WorkflowActivation::ResolveActivity?
 
-          # / An activity was resolved, result could be completed, failed or cancelled
+          # An activity was resolved, result could be completed, failed or cancelled
           #
           def resolve_activity=: [M < ::Temporalio::Bridge::Api::WorkflowActivation::ResolveActivity::_ToProto] (M?) -> M?
                                | ...
 
           def resolve_activity!: () -> ::Temporalio::Bridge::Api::WorkflowActivation::ResolveActivity?
 
-          # / A patch marker has been detected and lang is being told that change exists. This
-          # / job is strange in that it is sent pre-emptively to lang without any corresponding
-          # / command being sent first.
+          # A patch marker has been detected and lang is being told that change exists. This
+          #  job is strange in that it is sent pre-emptively to lang without any corresponding
+          #  command being sent first.
           #
           attr_accessor notify_has_patch(): ::Temporalio::Bridge::Api::WorkflowActivation::NotifyHasPatch?
 
-          # / A patch marker has been detected and lang is being told that change exists. This
-          # / job is strange in that it is sent pre-emptively to lang without any corresponding
-          # / command being sent first.
+          # A patch marker has been detected and lang is being told that change exists. This
+          #  job is strange in that it is sent pre-emptively to lang without any corresponding
+          #  command being sent first.
           #
           def notify_has_patch=: [M < ::Temporalio::Bridge::Api::WorkflowActivation::NotifyHasPatch::_ToProto] (M?) -> M?
                                | ...
 
           def notify_has_patch!: () -> ::Temporalio::Bridge::Api::WorkflowActivation::NotifyHasPatch?
 
-          # / A child workflow execution has started or failed to start
+          # A child workflow execution has started or failed to start
           #
           attr_accessor resolve_child_workflow_execution_start(): ::Temporalio::Bridge::Api::WorkflowActivation::ResolveChildWorkflowExecutionStart?
 
-          # / A child workflow execution has started or failed to start
+          # A child workflow execution has started or failed to start
           #
           def resolve_child_workflow_execution_start=: [M < ::Temporalio::Bridge::Api::WorkflowActivation::ResolveChildWorkflowExecutionStart::_ToProto] (M?) -> M?
                                                      | ...
 
           def resolve_child_workflow_execution_start!: () -> ::Temporalio::Bridge::Api::WorkflowActivation::ResolveChildWorkflowExecutionStart?
 
-          # / A child workflow was resolved, result could be completed or failed
+          # A child workflow was resolved, result could be completed or failed
           #
           attr_accessor resolve_child_workflow_execution(): ::Temporalio::Bridge::Api::WorkflowActivation::ResolveChildWorkflowExecution?
 
-          # / A child workflow was resolved, result could be completed or failed
+          # A child workflow was resolved, result could be completed or failed
           #
           def resolve_child_workflow_execution=: [M < ::Temporalio::Bridge::Api::WorkflowActivation::ResolveChildWorkflowExecution::_ToProto] (M?) -> M?
                                                | ...
 
           def resolve_child_workflow_execution!: () -> ::Temporalio::Bridge::Api::WorkflowActivation::ResolveChildWorkflowExecution?
 
-          # / An attempt to signal an external workflow resolved
+          # An attempt to signal an external workflow resolved
           #
           attr_accessor resolve_signal_external_workflow(): ::Temporalio::Bridge::Api::WorkflowActivation::ResolveSignalExternalWorkflow?
 
-          # / An attempt to signal an external workflow resolved
+          # An attempt to signal an external workflow resolved
           #
           def resolve_signal_external_workflow=: [M < ::Temporalio::Bridge::Api::WorkflowActivation::ResolveSignalExternalWorkflow::_ToProto] (M?) -> M?
                                                | ...
 
           def resolve_signal_external_workflow!: () -> ::Temporalio::Bridge::Api::WorkflowActivation::ResolveSignalExternalWorkflow?
 
-          # / An attempt to cancel an external workflow resolved
+          # An attempt to cancel an external workflow resolved
           #
           attr_accessor resolve_request_cancel_external_workflow(): ::Temporalio::Bridge::Api::WorkflowActivation::ResolveRequestCancelExternalWorkflow?
 
-          # / An attempt to cancel an external workflow resolved
+          # An attempt to cancel an external workflow resolved
           #
           def resolve_request_cancel_external_workflow=: [M < ::Temporalio::Bridge::Api::WorkflowActivation::ResolveRequestCancelExternalWorkflow::_ToProto] (M?) -> M?
                                                        | ...
 
           def resolve_request_cancel_external_workflow!: () -> ::Temporalio::Bridge::Api::WorkflowActivation::ResolveRequestCancelExternalWorkflow?
 
-          # / Remove the workflow identified by the [WorkflowActivation] containing this job from the cache
-          # / after performing the activation.
-          # /
-          # / If other job variant are present in the list, this variant will be the last job in the
-          # / job list. The string value is a reason for eviction.
+          # Remove the workflow identified by the [WorkflowActivation] containing this job from the cache
+          #  after performing the activation.
+          #
+          #  If other job variant are present in the list, this variant will be the last job in the
+          #  job list. The string value is a reason for eviction.
           #
           attr_accessor remove_from_cache(): ::Temporalio::Bridge::Api::WorkflowActivation::RemoveFromCache?
 
-          # / Remove the workflow identified by the [WorkflowActivation] containing this job from the cache
-          # / after performing the activation.
-          # /
-          # / If other job variant are present in the list, this variant will be the last job in the
-          # / job list. The string value is a reason for eviction.
+          # Remove the workflow identified by the [WorkflowActivation] containing this job from the cache
+          #  after performing the activation.
+          #
+          #  If other job variant are present in the list, this variant will be the last job in the
+          #  job list. The string value is a reason for eviction.
           #
           def remove_from_cache=: [M < ::Temporalio::Bridge::Api::WorkflowActivation::RemoveFromCache::_ToProto] (M?) -> M?
                                 | ...
@@ -642,14 +660,14 @@ module Temporalio
           type hash[KEY] = ::Hash[KEY, StartWorkflow | _ToProto]
         end
 
-        # / Notify a workflow that a timer has fired
+        # Notify a workflow that a timer has fired
         #
         class FireTimer < ::Protobuf::Message
           # Encode the message to a binary string
           #
           def self.encode: (FireTimer) -> String
 
-          # / Sequence number as provided by lang in the corresponding StartTimer command
+          # Sequence number as provided by lang in the corresponding StartTimer command
           #
           attr_accessor seq(): ::Integer
 
@@ -681,14 +699,14 @@ module Temporalio
           type hash[KEY] = ::Hash[KEY, FireTimer | _ToProto]
         end
 
-        # / Notify a workflow that an activity has been resolved
+        # Notify a workflow that an activity has been resolved
         #
         class ResolveActivity < ::Protobuf::Message
           # Encode the message to a binary string
           #
           def self.encode: (ResolveActivity) -> String
 
-          # / Sequence number as provided by lang in the corresponding ScheduleActivity command
+          # Sequence number as provided by lang in the corresponding ScheduleActivity command
           #
           attr_accessor seq(): ::Integer
 
@@ -730,15 +748,15 @@ module Temporalio
           type hash[KEY] = ::Hash[KEY, ResolveActivity | _ToProto]
         end
 
-        # / Notify a workflow that a start child workflow execution request has succeeded, failed or was
-        # / cancelled.
+        # Notify a workflow that a start child workflow execution request has succeeded, failed or was
+        #  cancelled.
         #
         class ResolveChildWorkflowExecutionStart < ::Protobuf::Message
           # Encode the message to a binary string
           #
           def self.encode: (ResolveChildWorkflowExecutionStart) -> String
 
-          # / Sequence number as provided by lang in the corresponding StartChildWorkflowExecution command
+          # Sequence number as provided by lang in the corresponding StartChildWorkflowExecution command
           #
           attr_accessor seq(): ::Integer
 
@@ -800,7 +818,7 @@ module Temporalio
           type hash[KEY] = ::Hash[KEY, ResolveChildWorkflowExecutionStart | _ToProto]
         end
 
-        # / Simply pass the run_id to lang
+        # Simply pass the run_id to lang
         #
         class ResolveChildWorkflowExecutionStartSuccess < ::Protobuf::Message
           # Encode the message to a binary string
@@ -837,15 +855,15 @@ module Temporalio
           type hash[KEY] = ::Hash[KEY, ResolveChildWorkflowExecutionStartSuccess | _ToProto]
         end
 
-        # / Provide lang the cause of failure
+        # Provide lang the cause of failure
         #
         class ResolveChildWorkflowExecutionStartFailure < ::Protobuf::Message
           # Encode the message to a binary string
           #
           def self.encode: (ResolveChildWorkflowExecutionStartFailure) -> String
 
-          # / Lang should have this information but it's more convenient to pass it back
-          # / for error construction on the lang side.
+          # Lang should have this information but it's more convenient to pass it back
+          #  for error construction on the lang side.
           #
           attr_accessor workflow_id(): ::String
 
@@ -893,8 +911,8 @@ module Temporalio
           type hash[KEY] = ::Hash[KEY, ResolveChildWorkflowExecutionStartFailure | _ToProto]
         end
 
-        # / `failure` should be ChildWorkflowFailure with cause set to CancelledFailure.
-        # / The failure is constructed in core for lang's convenience.
+        # `failure` should be ChildWorkflowFailure with cause set to CancelledFailure.
+        #  The failure is constructed in core for lang's convenience.
         #
         class ResolveChildWorkflowExecutionStartCancelled < ::Protobuf::Message
           # Encode the message to a binary string
@@ -935,14 +953,14 @@ module Temporalio
           type hash[KEY] = ::Hash[KEY, ResolveChildWorkflowExecutionStartCancelled | _ToProto]
         end
 
-        # / Notify a workflow that a child workflow execution has been resolved
+        # Notify a workflow that a child workflow execution has been resolved
         #
         class ResolveChildWorkflowExecution < ::Protobuf::Message
           # Encode the message to a binary string
           #
           def self.encode: (ResolveChildWorkflowExecution) -> String
 
-          # / Sequence number as provided by lang in the corresponding StartChildWorkflowExecution command
+          # Sequence number as provided by lang in the corresponding StartChildWorkflowExecution command
           #
           attr_accessor seq(): ::Integer
 
@@ -984,7 +1002,7 @@ module Temporalio
           type hash[KEY] = ::Hash[KEY, ResolveChildWorkflowExecution | _ToProto]
         end
 
-        # / Update the workflow's random seed
+        # Update the workflow's random seed
         #
         class UpdateRandomSeed < ::Protobuf::Message
           # Encode the message to a binary string
@@ -1021,22 +1039,22 @@ module Temporalio
           type hash[KEY] = ::Hash[KEY, UpdateRandomSeed | _ToProto]
         end
 
-        # / Query a workflow
+        # Query a workflow
         #
         class QueryWorkflow < ::Protobuf::Message
           # Encode the message to a binary string
           #
           def self.encode: (QueryWorkflow) -> String
 
-          # / For PollWFTResp `query` field, this will be set to the special value `legacy`. For the
-          # / `queries` field, the server provides a unique identifier. If it is a `legacy` query,
-          # / lang cannot issue any commands in response other than to answer the query.
+          # For PollWFTResp `query` field, this will be set to the special value `legacy`. For the
+          #  `queries` field, the server provides a unique identifier. If it is a `legacy` query,
+          #  lang cannot issue any commands in response other than to answer the query.
           #
           attr_accessor query_id(): ::String
 
           def query_id!: () -> ::String?
 
-          # / The query's function/method/etc name
+          # The query's function/method/etc name
           #
           attr_accessor query_type(): ::String
 
@@ -1049,11 +1067,11 @@ module Temporalio
 
           def arguments!: () -> ::Temporalio::Api::Common::V1::Payload::field_array?
 
-          # / Headers attached to the query
+          # Headers attached to the query
           #
           attr_accessor headers(): ::Temporalio::Api::Common::V1::Payload::field_hash[::String]
 
-          # / Headers attached to the query
+          # Headers attached to the query
           #
           def headers=: (::Temporalio::Api::Common::V1::Payload::hash[::String]) -> ::Temporalio::Api::Common::V1::Payload::hash[::String]
                       | ...
@@ -1094,18 +1112,18 @@ module Temporalio
           type hash[KEY] = ::Hash[KEY, QueryWorkflow | _ToProto]
         end
 
-        # / Cancel a running workflow
+        # Cancel a running workflow
         #
         class CancelWorkflow < ::Protobuf::Message
           # Encode the message to a binary string
           #
           def self.encode: (CancelWorkflow) -> String
 
-          # / Information from the cancellation request
+          # Information from the cancellation request
           #
           attr_accessor details(): ::Temporalio::Api::Common::V1::Payload::field_array
 
-          # / Information from the cancellation request
+          # Information from the cancellation request
           #
           def details=: (::Temporalio::Api::Common::V1::Payload::array) -> ::Temporalio::Api::Common::V1::Payload::array
                       | ...
@@ -1251,20 +1269,20 @@ module Temporalio
           #
           def self.encode: (ResolveSignalExternalWorkflow) -> String
 
-          # / Sequence number as provided by lang in the corresponding SignalExternalWorkflowExecution
-          # / command
+          # Sequence number as provided by lang in the corresponding SignalExternalWorkflowExecution
+          #  command
           #
           attr_accessor seq(): ::Integer
 
           def seq!: () -> ::Integer?
 
-          # / If populated, this signal either failed to be sent or was cancelled depending on failure
-          # / type / info.
+          # If populated, this signal either failed to be sent or was cancelled depending on failure
+          #  type / info.
           #
           attr_accessor failure(): ::Temporalio::Api::Failure::V1::Failure?
 
-          # / If populated, this signal either failed to be sent or was cancelled depending on failure
-          # / type / info.
+          # If populated, this signal either failed to be sent or was cancelled depending on failure
+          #  type / info.
           #
           def failure=: [M < ::Temporalio::Api::Failure::V1::Failure::_ToProto] (M?) -> M?
                       | ...
@@ -1305,20 +1323,20 @@ module Temporalio
           #
           def self.encode: (ResolveRequestCancelExternalWorkflow) -> String
 
-          # / Sequence number as provided by lang in the corresponding
-          # / RequestCancelExternalWorkflowExecution command
+          # Sequence number as provided by lang in the corresponding
+          #  RequestCancelExternalWorkflowExecution command
           #
           attr_accessor seq(): ::Integer
 
           def seq!: () -> ::Integer?
 
-          # / If populated, this signal either failed to be sent or was cancelled depending on failure
-          # / type / info.
+          # If populated, this signal either failed to be sent or was cancelled depending on failure
+          #  type / info.
           #
           attr_accessor failure(): ::Temporalio::Api::Failure::V1::Failure?
 
-          # / If populated, this signal either failed to be sent or was cancelled depending on failure
-          # / type / info.
+          # If populated, this signal either failed to be sent or was cancelled depending on failure
+          #  type / info.
           #
           def failure=: [M < ::Temporalio::Api::Failure::V1::Failure::_ToProto] (M?) -> M?
                       | ...

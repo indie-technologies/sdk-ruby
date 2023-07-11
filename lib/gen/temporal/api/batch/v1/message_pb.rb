@@ -7,6 +7,7 @@ require 'dependencies/gogoproto/gogo_pb'
 require 'google/protobuf/timestamp_pb'
 require 'temporal/api/common/v1/message_pb'
 require 'temporal/api/enums/v1/batch_operation_pb'
+require 'temporal/api/enums/v1/reset_pb'
 
 Google::Protobuf::DescriptorPool.generated_pool.build do
   add_file("temporal/api/batch/v1/message.proto", :syntax => :proto3) do
@@ -32,6 +33,11 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     add_message "temporal.api.batch.v1.BatchOperationDeletion" do
       optional :identity, :string, 1
     end
+    add_message "temporal.api.batch.v1.BatchOperationReset" do
+      optional :reset_type, :enum, 1, "temporal.api.enums.v1.ResetType"
+      optional :reset_reapply_type, :enum, 2, "temporal.api.enums.v1.ResetReapplyType"
+      optional :identity, :string, 3
+    end
   end
 end
 
@@ -44,6 +50,7 @@ module Temporalio
         BatchOperationSignal = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.batch.v1.BatchOperationSignal").msgclass
         BatchOperationCancellation = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.batch.v1.BatchOperationCancellation").msgclass
         BatchOperationDeletion = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.batch.v1.BatchOperationDeletion").msgclass
+        BatchOperationReset = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.batch.v1.BatchOperationReset").msgclass
       end
     end
   end

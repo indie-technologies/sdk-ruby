@@ -43,6 +43,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       value :NOT_FOUND, 0
       value :CANCELLED, 1
       value :TIMED_OUT, 2
+      value :WORKER_SHUTDOWN, 3
     end
   end
 end

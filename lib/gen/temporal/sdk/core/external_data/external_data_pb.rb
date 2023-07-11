@@ -17,6 +17,10 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :backoff, :message, 6, "google.protobuf.Duration"
       optional :original_schedule_time, :message, 7, "google.protobuf.Timestamp"
     end
+    add_message "coresdk.external_data.PatchedMarkerData" do
+      optional :id, :string, 1
+      optional :deprecated, :bool, 2
+    end
   end
 end
 
@@ -25,6 +29,7 @@ module Temporalio
     module Api
       module ExternalData
         LocalActivityMarkerData = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("coresdk.external_data.LocalActivityMarkerData").msgclass
+        PatchedMarkerData = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("coresdk.external_data.PatchedMarkerData").msgclass
       end
     end
   end

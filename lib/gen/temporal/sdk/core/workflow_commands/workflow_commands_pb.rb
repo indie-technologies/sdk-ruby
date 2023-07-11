@@ -57,6 +57,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :retry_policy, :message, 12, "temporal.api.common.v1.RetryPolicy"
       optional :cancellation_type, :enum, 13, "coresdk.workflow_commands.ActivityCancellationType"
       optional :do_not_eagerly_execute, :bool, 14
+      optional :versioning_intent, :enum, 15, "coresdk.common.VersioningIntent"
     end
     add_message "coresdk.workflow_commands.ScheduleLocalActivity" do
       optional :seq, :uint32, 1
@@ -105,6 +106,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       map :headers, :string, :message, 7, "temporal.api.common.v1.Payload"
       map :search_attributes, :string, :message, 8, "temporal.api.common.v1.Payload"
       optional :retry_policy, :message, 9, "temporal.api.common.v1.RetryPolicy"
+      optional :versioning_intent, :enum, 10, "coresdk.common.VersioningIntent"
     end
     add_message "coresdk.workflow_commands.CancelWorkflowExecution" do
     end
@@ -130,6 +132,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       map :memo, :string, :message, 16, "temporal.api.common.v1.Payload"
       map :search_attributes, :string, :message, 17, "temporal.api.common.v1.Payload"
       optional :cancellation_type, :enum, 18, "coresdk.child_workflow.ChildWorkflowCancellationType"
+      optional :versioning_intent, :enum, 19, "coresdk.common.VersioningIntent"
     end
     add_message "coresdk.workflow_commands.CancelChildWorkflowExecution" do
       optional :child_workflow_seq, :uint32, 1

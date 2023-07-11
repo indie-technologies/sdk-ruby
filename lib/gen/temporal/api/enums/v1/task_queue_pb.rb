@@ -15,6 +15,13 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       value :TASK_QUEUE_TYPE_WORKFLOW, 1
       value :TASK_QUEUE_TYPE_ACTIVITY, 2
     end
+    add_enum "temporal.api.enums.v1.TaskReachability" do
+      value :TASK_REACHABILITY_UNSPECIFIED, 0
+      value :TASK_REACHABILITY_NEW_WORKFLOWS, 1
+      value :TASK_REACHABILITY_EXISTING_WORKFLOWS, 2
+      value :TASK_REACHABILITY_OPEN_WORKFLOWS, 3
+      value :TASK_REACHABILITY_CLOSED_WORKFLOWS, 4
+    end
   end
 end
 
@@ -24,6 +31,7 @@ module Temporalio
       module V1
         TaskQueueKind = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.enums.v1.TaskQueueKind").enummodule
         TaskQueueType = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.enums.v1.TaskQueueType").enummodule
+        TaskReachability = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.enums.v1.TaskReachability").enummodule
       end
     end
   end

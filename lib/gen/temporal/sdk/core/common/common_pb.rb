@@ -12,6 +12,11 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :workflow_id, :string, 2
       optional :run_id, :string, 3
     end
+    add_enum "coresdk.common.VersioningIntent" do
+      value :UNSPECIFIED, 0
+      value :COMPATIBLE, 1
+      value :DEFAULT, 2
+    end
   end
 end
 
@@ -20,6 +25,7 @@ module Temporalio
     module Api
       module Common
         NamespacedWorkflowExecution = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("coresdk.common.NamespacedWorkflowExecution").msgclass
+        VersioningIntent = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("coresdk.common.VersioningIntent").enummodule
       end
     end
   end

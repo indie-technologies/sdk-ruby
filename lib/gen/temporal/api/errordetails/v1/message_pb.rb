@@ -57,6 +57,9 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     end
     add_message "temporal.api.errordetails.v1.WorkflowNotReadyFailure" do
     end
+    add_message "temporal.api.errordetails.v1.NewerBuildExistsFailure" do
+      optional :default_build_id, :string, 1
+    end
   end
 end
 
@@ -78,6 +81,7 @@ module Temporalio
         ResourceExhaustedFailure = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.errordetails.v1.ResourceExhaustedFailure").msgclass
         SystemWorkflowFailure = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.errordetails.v1.SystemWorkflowFailure").msgclass
         WorkflowNotReadyFailure = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.errordetails.v1.WorkflowNotReadyFailure").msgclass
+        NewerBuildExistsFailure = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.errordetails.v1.NewerBuildExistsFailure").msgclass
       end
     end
   end

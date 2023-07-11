@@ -113,6 +113,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :request_eager_execution, :bool, 17
       optional :continued_failure, :message, 18, "temporal.api.failure.v1.Failure"
       optional :last_completion_result, :message, 19, "temporal.api.common.v1.Payloads"
+      optional :workflow_start_delay, :message, 20, "google.protobuf.Duration"
     end
     add_message "temporal.api.workflowservice.v1.StartWorkflowExecutionResponse" do
       optional :run_id, :string, 1
@@ -148,7 +149,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :task_queue, :message, 2, "temporal.api.taskqueue.v1.TaskQueue"
       optional :identity, :string, 3
       optional :binary_checksum, :string, 4
-      optional :worker_versioning_id, :message, 5, "temporal.api.taskqueue.v1.VersionId"
+      optional :worker_version_capabilities, :message, 5, "temporal.api.common.v1.WorkerVersionCapabilities"
     end
     add_message "temporal.api.workflowservice.v1.PollWorkflowTaskQueueResponse" do
       optional :task_token, :bytes, 1
@@ -177,7 +178,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :binary_checksum, :string, 7
       map :query_results, :string, :message, 8, "temporal.api.query.v1.WorkflowQueryResult"
       optional :namespace, :string, 9
-      optional :worker_versioning_id, :message, 10, "temporal.api.taskqueue.v1.VersionId"
+      optional :worker_version_stamp, :message, 10, "temporal.api.common.v1.WorkerVersionStamp"
       repeated :messages, :message, 11, "temporal.api.protocol.v1.Message"
       optional :sdk_metadata, :message, 12, "temporal.api.sdk.v1.WorkflowTaskCompletedMetadata"
       optional :metering_metadata, :message, 13, "temporal.api.common.v1.MeteringMetadata"
@@ -195,6 +196,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :binary_checksum, :string, 5
       optional :namespace, :string, 6
       repeated :messages, :message, 7, "temporal.api.protocol.v1.Message"
+      optional :worker_version, :message, 8, "temporal.api.common.v1.WorkerVersionStamp"
     end
     add_message "temporal.api.workflowservice.v1.RespondWorkflowTaskFailedResponse" do
     end
@@ -203,7 +205,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :task_queue, :message, 2, "temporal.api.taskqueue.v1.TaskQueue"
       optional :identity, :string, 3
       optional :task_queue_metadata, :message, 4, "temporal.api.taskqueue.v1.TaskQueueMetadata"
-      optional :worker_versioning_id, :message, 5, "temporal.api.taskqueue.v1.VersionId"
+      optional :worker_version_capabilities, :message, 5, "temporal.api.common.v1.WorkerVersionCapabilities"
     end
     add_message "temporal.api.workflowservice.v1.PollActivityTaskQueueResponse" do
       optional :task_token, :bytes, 1
@@ -249,6 +251,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :result, :message, 2, "temporal.api.common.v1.Payloads"
       optional :identity, :string, 3
       optional :namespace, :string, 4
+      optional :worker_version, :message, 5, "temporal.api.common.v1.WorkerVersionStamp"
     end
     add_message "temporal.api.workflowservice.v1.RespondActivityTaskCompletedResponse" do
     end
@@ -268,6 +271,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :identity, :string, 3
       optional :namespace, :string, 4
       optional :last_heartbeat_details, :message, 5, "temporal.api.common.v1.Payloads"
+      optional :worker_version, :message, 6, "temporal.api.common.v1.WorkerVersionStamp"
     end
     add_message "temporal.api.workflowservice.v1.RespondActivityTaskFailedResponse" do
       repeated :failures, :message, 1, "temporal.api.failure.v1.Failure"
@@ -289,6 +293,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :details, :message, 2, "temporal.api.common.v1.Payloads"
       optional :identity, :string, 3
       optional :namespace, :string, 4
+      optional :worker_version, :message, 5, "temporal.api.common.v1.WorkerVersionStamp"
     end
     add_message "temporal.api.workflowservice.v1.RespondActivityTaskCanceledResponse" do
     end
@@ -321,6 +326,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :request_id, :string, 6
       optional :control, :string, 7
       optional :header, :message, 8, "temporal.api.common.v1.Header"
+      optional :skip_generate_workflow_task, :bool, 9
     end
     add_message "temporal.api.workflowservice.v1.SignalWorkflowExecutionResponse" do
     end
@@ -344,6 +350,8 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :memo, :message, 17, "temporal.api.common.v1.Memo"
       optional :search_attributes, :message, 18, "temporal.api.common.v1.SearchAttributes"
       optional :header, :message, 19, "temporal.api.common.v1.Header"
+      optional :workflow_start_delay, :message, 20, "google.protobuf.Duration"
+      optional :skip_generate_workflow_task, :bool, 21
     end
     add_message "temporal.api.workflowservice.v1.SignalWithStartWorkflowExecutionResponse" do
       optional :run_id, :string, 1
@@ -597,23 +605,45 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       repeated :schedules, :message, 1, "temporal.api.schedule.v1.ScheduleListEntry"
       optional :next_page_token, :bytes, 2
     end
-    add_message "temporal.api.workflowservice.v1.UpdateWorkerBuildIdOrderingRequest" do
+    add_message "temporal.api.workflowservice.v1.UpdateWorkerBuildIdCompatibilityRequest" do
       optional :namespace, :string, 1
       optional :task_queue, :string, 2
-      optional :version_id, :message, 3, "temporal.api.taskqueue.v1.VersionId"
-      optional :previous_compatible, :message, 4, "temporal.api.taskqueue.v1.VersionId"
-      optional :become_default, :bool, 5
+      oneof :operation do
+        optional :add_new_build_id_in_new_default_set, :string, 3
+        optional :add_new_compatible_build_id, :message, 4, "temporal.api.workflowservice.v1.UpdateWorkerBuildIdCompatibilityRequest.AddNewCompatibleVersion"
+        optional :promote_set_by_build_id, :string, 5
+        optional :promote_build_id_within_set, :string, 6
+        optional :merge_sets, :message, 7, "temporal.api.workflowservice.v1.UpdateWorkerBuildIdCompatibilityRequest.MergeSets"
+      end
     end
-    add_message "temporal.api.workflowservice.v1.UpdateWorkerBuildIdOrderingResponse" do
+    add_message "temporal.api.workflowservice.v1.UpdateWorkerBuildIdCompatibilityRequest.AddNewCompatibleVersion" do
+      optional :new_build_id, :string, 1
+      optional :existing_compatible_build_id, :string, 2
+      optional :make_set_default, :bool, 3
     end
-    add_message "temporal.api.workflowservice.v1.GetWorkerBuildIdOrderingRequest" do
+    add_message "temporal.api.workflowservice.v1.UpdateWorkerBuildIdCompatibilityRequest.MergeSets" do
+      optional :primary_set_build_id, :string, 1
+      optional :secondary_set_build_id, :string, 2
+    end
+    add_message "temporal.api.workflowservice.v1.UpdateWorkerBuildIdCompatibilityResponse" do
+      optional :version_set_id, :string, 1
+    end
+    add_message "temporal.api.workflowservice.v1.GetWorkerBuildIdCompatibilityRequest" do
       optional :namespace, :string, 1
       optional :task_queue, :string, 2
-      optional :max_depth, :int32, 3
+      optional :max_sets, :int32, 3
     end
-    add_message "temporal.api.workflowservice.v1.GetWorkerBuildIdOrderingResponse" do
-      optional :current_default, :message, 1, "temporal.api.taskqueue.v1.VersionIdNode"
-      repeated :compatible_leaves, :message, 2, "temporal.api.taskqueue.v1.VersionIdNode"
+    add_message "temporal.api.workflowservice.v1.GetWorkerBuildIdCompatibilityResponse" do
+      repeated :major_version_sets, :message, 1, "temporal.api.taskqueue.v1.CompatibleVersionSet"
+    end
+    add_message "temporal.api.workflowservice.v1.GetWorkerTaskReachabilityRequest" do
+      optional :namespace, :string, 1
+      repeated :build_ids, :string, 2
+      repeated :task_queues, :string, 3
+      optional :reachability, :enum, 4, "temporal.api.enums.v1.TaskReachability"
+    end
+    add_message "temporal.api.workflowservice.v1.GetWorkerTaskReachabilityResponse" do
+      repeated :build_id_reachability, :message, 1, "temporal.api.taskqueue.v1.BuildIdReachability"
     end
     add_message "temporal.api.workflowservice.v1.UpdateWorkflowExecutionRequest" do
       optional :namespace, :string, 1
@@ -637,6 +667,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
         optional :signal_operation, :message, 11, "temporal.api.batch.v1.BatchOperationSignal"
         optional :cancellation_operation, :message, 12, "temporal.api.batch.v1.BatchOperationCancellation"
         optional :deletion_operation, :message, 13, "temporal.api.batch.v1.BatchOperationDeletion"
+        optional :reset_operation, :message, 14, "temporal.api.batch.v1.BatchOperationReset"
       end
     end
     add_message "temporal.api.workflowservice.v1.StartBatchOperationResponse" do
@@ -673,6 +704,15 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     add_message "temporal.api.workflowservice.v1.ListBatchOperationsResponse" do
       repeated :operation_info, :message, 1, "temporal.api.batch.v1.BatchOperationInfo"
       optional :next_page_token, :bytes, 2
+    end
+    add_message "temporal.api.workflowservice.v1.PollWorkflowExecutionUpdateRequest" do
+      optional :namespace, :string, 1
+      optional :update_ref, :message, 2, "temporal.api.update.v1.UpdateRef"
+      optional :identity, :string, 3
+      optional :wait_policy, :message, 4, "temporal.api.update.v1.WaitPolicy"
+    end
+    add_message "temporal.api.workflowservice.v1.PollWorkflowExecutionUpdateResponse" do
+      optional :outcome, :message, 1, "temporal.api.update.v1.Outcome"
     end
   end
 end
@@ -778,10 +818,14 @@ module Temporalio
         DeleteScheduleResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.DeleteScheduleResponse").msgclass
         ListSchedulesRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.ListSchedulesRequest").msgclass
         ListSchedulesResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.ListSchedulesResponse").msgclass
-        UpdateWorkerBuildIdOrderingRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.UpdateWorkerBuildIdOrderingRequest").msgclass
-        UpdateWorkerBuildIdOrderingResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.UpdateWorkerBuildIdOrderingResponse").msgclass
-        GetWorkerBuildIdOrderingRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.GetWorkerBuildIdOrderingRequest").msgclass
-        GetWorkerBuildIdOrderingResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.GetWorkerBuildIdOrderingResponse").msgclass
+        UpdateWorkerBuildIdCompatibilityRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.UpdateWorkerBuildIdCompatibilityRequest").msgclass
+        UpdateWorkerBuildIdCompatibilityRequest::AddNewCompatibleVersion = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.UpdateWorkerBuildIdCompatibilityRequest.AddNewCompatibleVersion").msgclass
+        UpdateWorkerBuildIdCompatibilityRequest::MergeSets = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.UpdateWorkerBuildIdCompatibilityRequest.MergeSets").msgclass
+        UpdateWorkerBuildIdCompatibilityResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.UpdateWorkerBuildIdCompatibilityResponse").msgclass
+        GetWorkerBuildIdCompatibilityRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.GetWorkerBuildIdCompatibilityRequest").msgclass
+        GetWorkerBuildIdCompatibilityResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.GetWorkerBuildIdCompatibilityResponse").msgclass
+        GetWorkerTaskReachabilityRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.GetWorkerTaskReachabilityRequest").msgclass
+        GetWorkerTaskReachabilityResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.GetWorkerTaskReachabilityResponse").msgclass
         UpdateWorkflowExecutionRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.UpdateWorkflowExecutionRequest").msgclass
         UpdateWorkflowExecutionResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.UpdateWorkflowExecutionResponse").msgclass
         StartBatchOperationRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.StartBatchOperationRequest").msgclass
@@ -792,6 +836,8 @@ module Temporalio
         DescribeBatchOperationResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.DescribeBatchOperationResponse").msgclass
         ListBatchOperationsRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.ListBatchOperationsRequest").msgclass
         ListBatchOperationsResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.ListBatchOperationsResponse").msgclass
+        PollWorkflowExecutionUpdateRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.PollWorkflowExecutionUpdateRequest").msgclass
+        PollWorkflowExecutionUpdateResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("temporal.api.workflowservice.v1.PollWorkflowExecutionUpdateResponse").msgclass
       end
     end
   end

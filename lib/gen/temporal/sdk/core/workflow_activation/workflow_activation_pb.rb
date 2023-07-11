@@ -21,6 +21,8 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :history_length, :uint32, 4
       repeated :jobs, :message, 5, "coresdk.workflow_activation.WorkflowActivationJob"
       repeated :available_internal_flags, :uint32, 6
+      optional :history_size_bytes, :uint64, 7
+      optional :continue_as_new_suggested, :bool, 8
     end
     add_message "coresdk.workflow_activation.WorkflowActivationJob" do
       oneof :variant do

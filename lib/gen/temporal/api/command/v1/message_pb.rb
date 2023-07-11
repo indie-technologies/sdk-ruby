@@ -25,6 +25,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :heartbeat_timeout, :message, 10, "google.protobuf.Duration"
       optional :retry_policy, :message, 11, "temporal.api.common.v1.RetryPolicy"
       optional :request_eager_execution, :bool, 12
+      optional :use_compatible_version, :bool, 13
     end
     add_message "temporal.api.command.v1.RequestCancelActivityTaskCommandAttributes" do
       optional :scheduled_event_id, :int64, 1
@@ -89,6 +90,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :header, :message, 12, "temporal.api.common.v1.Header"
       optional :memo, :message, 13, "temporal.api.common.v1.Memo"
       optional :search_attributes, :message, 14, "temporal.api.common.v1.SearchAttributes"
+      optional :use_compatible_version, :bool, 15
     end
     add_message "temporal.api.command.v1.StartChildWorkflowExecutionCommandAttributes" do
       optional :namespace, :string, 1
@@ -107,6 +109,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :header, :message, 14, "temporal.api.common.v1.Header"
       optional :memo, :message, 15, "temporal.api.common.v1.Memo"
       optional :search_attributes, :message, 16, "temporal.api.common.v1.SearchAttributes"
+      optional :use_compatible_version, :bool, 17
     end
     add_message "temporal.api.command.v1.ProtocolMessageCommandAttributes" do
       optional :message_id, :string, 1

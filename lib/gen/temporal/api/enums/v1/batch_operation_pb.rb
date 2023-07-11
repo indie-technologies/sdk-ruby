@@ -11,6 +11,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       value :BATCH_OPERATION_TYPE_CANCEL, 2
       value :BATCH_OPERATION_TYPE_SIGNAL, 3
       value :BATCH_OPERATION_TYPE_DELETE, 4
+      value :BATCH_OPERATION_TYPE_RESET, 5
     end
     add_enum "temporal.api.enums.v1.BatchOperationState" do
       value :BATCH_OPERATION_STATE_UNSPECIFIED, 0

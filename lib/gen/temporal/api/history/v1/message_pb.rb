@@ -46,6 +46,8 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :prev_auto_reset_points, :message, 24, "temporal.api.workflow.v1.ResetPoints"
       optional :header, :message, 25, "temporal.api.common.v1.Header"
       optional :parent_initiated_event_version, :int64, 26
+      optional :workflow_id, :string, 28
+      optional :source_version_stamp, :message, 29, "temporal.api.common.v1.WorkerVersionStamp"
     end
     add_message "temporal.api.history.v1.WorkflowExecutionCompletedEventAttributes" do
       optional :result, :message, 1, "temporal.api.common.v1.Payloads"
@@ -77,6 +79,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :header, :message, 12, "temporal.api.common.v1.Header"
       optional :memo, :message, 13, "temporal.api.common.v1.Memo"
       optional :search_attributes, :message, 14, "temporal.api.common.v1.SearchAttributes"
+      optional :use_compatible_version, :bool, 15
     end
     add_message "temporal.api.history.v1.WorkflowTaskScheduledEventAttributes" do
       optional :task_queue, :message, 1, "temporal.api.taskqueue.v1.TaskQueue"
@@ -95,7 +98,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :started_event_id, :int64, 2
       optional :identity, :string, 3
       optional :binary_checksum, :string, 4
-      optional :worker_versioning_id, :message, 5, "temporal.api.taskqueue.v1.VersionId"
+      optional :worker_version, :message, 5, "temporal.api.common.v1.WorkerVersionStamp"
       optional :sdk_metadata, :message, 6, "temporal.api.sdk.v1.WorkflowTaskCompletedMetadata"
       optional :metering_metadata, :message, 13, "temporal.api.common.v1.MeteringMetadata"
     end
@@ -114,6 +117,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :new_run_id, :string, 7
       optional :fork_event_version, :int64, 8
       optional :binary_checksum, :string, 9
+      optional :worker_version, :message, 10, "temporal.api.common.v1.WorkerVersionStamp"
     end
     add_message "temporal.api.history.v1.ActivityTaskScheduledEventAttributes" do
       optional :activity_id, :string, 1
@@ -127,6 +131,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :heartbeat_timeout, :message, 10, "google.protobuf.Duration"
       optional :workflow_task_completed_event_id, :int64, 11
       optional :retry_policy, :message, 12, "temporal.api.common.v1.RetryPolicy"
+      optional :use_compatible_version, :bool, 13
     end
     add_message "temporal.api.history.v1.ActivityTaskStartedEventAttributes" do
       optional :scheduled_event_id, :int64, 1
@@ -140,6 +145,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :scheduled_event_id, :int64, 2
       optional :started_event_id, :int64, 3
       optional :identity, :string, 4
+      optional :worker_version, :message, 5, "temporal.api.common.v1.WorkerVersionStamp"
     end
     add_message "temporal.api.history.v1.ActivityTaskFailedEventAttributes" do
       optional :failure, :message, 1, "temporal.api.failure.v1.Failure"
@@ -147,6 +153,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :started_event_id, :int64, 3
       optional :identity, :string, 4
       optional :retry_state, :enum, 5, "temporal.api.enums.v1.RetryState"
+      optional :worker_version, :message, 6, "temporal.api.common.v1.WorkerVersionStamp"
     end
     add_message "temporal.api.history.v1.ActivityTaskTimedOutEventAttributes" do
       optional :failure, :message, 1, "temporal.api.failure.v1.Failure"
@@ -164,6 +171,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :scheduled_event_id, :int64, 3
       optional :started_event_id, :int64, 4
       optional :identity, :string, 5
+      optional :worker_version, :message, 6, "temporal.api.common.v1.WorkerVersionStamp"
     end
     add_message "temporal.api.history.v1.TimerStartedEventAttributes" do
       optional :timer_id, :string, 1
@@ -202,6 +210,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :input, :message, 2, "temporal.api.common.v1.Payloads"
       optional :identity, :string, 3
       optional :header, :message, 4, "temporal.api.common.v1.Header"
+      optional :skip_generate_workflow_task, :bool, 5
     end
     add_message "temporal.api.history.v1.WorkflowExecutionTerminatedEventAttributes" do
       optional :reason, :string, 1
@@ -286,6 +295,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :header, :message, 15, "temporal.api.common.v1.Header"
       optional :memo, :message, 16, "temporal.api.common.v1.Memo"
       optional :search_attributes, :message, 17, "temporal.api.common.v1.SearchAttributes"
+      optional :use_compatible_version, :bool, 19
     end
     add_message "temporal.api.history.v1.StartChildWorkflowExecutionFailedEventAttributes" do
       optional :namespace, :string, 1
@@ -369,6 +379,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     end
     add_message "temporal.api.history.v1.WorkflowExecutionUpdateCompletedEventAttributes" do
       optional :meta, :message, 1, "temporal.api.update.v1.Meta"
+      optional :accepted_event_id, :int64, 3
       optional :outcome, :message, 2, "temporal.api.update.v1.Outcome"
     end
     add_message "temporal.api.history.v1.WorkflowExecutionUpdateRejectedEventAttributes" do

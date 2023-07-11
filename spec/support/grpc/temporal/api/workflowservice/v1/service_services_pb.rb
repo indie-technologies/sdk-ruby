@@ -288,20 +288,50 @@ module Temporalio
             rpc :DeleteSchedule, ::Temporalio::Api::WorkflowService::V1::DeleteScheduleRequest, ::Temporalio::Api::WorkflowService::V1::DeleteScheduleResponse
             # List all schedules in a namespace.
             rpc :ListSchedules, ::Temporalio::Api::WorkflowService::V1::ListSchedulesRequest, ::Temporalio::Api::WorkflowService::V1::ListSchedulesResponse
-            # Allows users to specify a graph of worker build id based versions on a
-            # per task queue basis. Versions are ordered, and may be either compatible
-            # with some extant version, or a new incompatible version.
+            # Allows users to specify sets of worker build id versions on a per task queue basis. Versions
+            # are ordered, and may be either compatible with some extant version, or a new incompatible
+            # version, forming sets of ids which are incompatible with each other, but whose contained
+            # members are compatible with one another.
+            #
+            # A single build id may be mapped to multiple task queues using this API for cases where a single process hosts
+            # multiple workers. 
+            # 
+            # To query which workers can be retired, use the `GetWorkerTaskReachability` API.
+            #
+            # NOTE: The number of task queues mapped to a single build id is limited by the `limit.taskQueuesPerBuildId`
+            # (default is 20), if this limit is exceeded this API will error with a FailedPrecondition.
+            #
             # (-- api-linter: core::0134::response-message-name=disabled
-            #     aip.dev/not-precedent: UpdateWorkerBuildIdOrdering RPC doesn't follow Google API format. --)
+            #     aip.dev/not-precedent: UpdateWorkerBuildIdCompatibility RPC doesn't follow Google API format. --)
             # (-- api-linter: core::0134::method-signature=disabled
-            #     aip.dev/not-precedent: UpdateWorkerBuildIdOrdering RPC doesn't follow Google API format. --)
-            rpc :UpdateWorkerBuildIdOrdering, ::Temporalio::Api::WorkflowService::V1::UpdateWorkerBuildIdOrderingRequest, ::Temporalio::Api::WorkflowService::V1::UpdateWorkerBuildIdOrderingResponse
-            # Fetches the worker build id versioning graph for some task queue.
-            rpc :GetWorkerBuildIdOrdering, ::Temporalio::Api::WorkflowService::V1::GetWorkerBuildIdOrderingRequest, ::Temporalio::Api::WorkflowService::V1::GetWorkerBuildIdOrderingResponse
+            #     aip.dev/not-precedent: UpdateWorkerBuildIdCompatibility RPC doesn't follow Google API format. --)
+            rpc :UpdateWorkerBuildIdCompatibility, ::Temporalio::Api::WorkflowService::V1::UpdateWorkerBuildIdCompatibilityRequest, ::Temporalio::Api::WorkflowService::V1::UpdateWorkerBuildIdCompatibilityResponse
+            # Fetches the worker build id versioning sets for a task queue.
+            rpc :GetWorkerBuildIdCompatibility, ::Temporalio::Api::WorkflowService::V1::GetWorkerBuildIdCompatibilityRequest, ::Temporalio::Api::WorkflowService::V1::GetWorkerBuildIdCompatibilityResponse
+            # Fetches task reachability to determine whether a worker may be retired.
+            # The request may specify task queues to query for or let the server fetch all task queues mapped to the given
+            # build IDs.
+            #
+            # When requesting a large number of task queues or all task queues associated with the given build ids in a
+            # namespace, all task queues will be listed in the response but some of them may not contain reachability
+            # information due to a server enforced limit. When reaching the limit, task queues that reachability information
+            # could not be retrieved for will be marked with a single TASK_REACHABILITY_UNSPECIFIED entry. The caller may issue
+            # another call to get the reachability for those task queues.
+            #
+            # Open source users can adjust this limit by setting the server's dynamic config value for
+            # `limit.reachabilityTaskQueueScan` with the caveat that this call can strain the visibility store.
+            rpc :GetWorkerTaskReachability, ::Temporalio::Api::WorkflowService::V1::GetWorkerTaskReachabilityRequest, ::Temporalio::Api::WorkflowService::V1::GetWorkerTaskReachabilityResponse
             # Invokes the specified update function on user workflow code.
             # (-- api-linter: core::0134=disabled
             #     aip.dev/not-precedent: UpdateWorkflowExecution doesn't follow Google API format --)
             rpc :UpdateWorkflowExecution, ::Temporalio::Api::WorkflowService::V1::UpdateWorkflowExecutionRequest, ::Temporalio::Api::WorkflowService::V1::UpdateWorkflowExecutionResponse
+            # Polls a workflow execution for the outcome of a workflow execution update
+            # previously issued through the UpdateWorkflowExecution RPC. The effective
+            # timeout on this call will be shorter of the the caller-supplied gRPC
+            # timeout and the server's configured long-poll timeout.
+            # (-- api-linter: core::0134=disabled
+            #     aip.dev/not-precedent: UpdateWorkflowExecution doesn't follow Google API format --)
+            rpc :PollWorkflowExecutionUpdate, ::Temporalio::Api::WorkflowService::V1::PollWorkflowExecutionUpdateRequest, ::Temporalio::Api::WorkflowService::V1::PollWorkflowExecutionUpdateResponse
             # StartBatchOperation starts a new batch operation
             rpc :StartBatchOperation, ::Temporalio::Api::WorkflowService::V1::StartBatchOperationRequest, ::Temporalio::Api::WorkflowService::V1::StartBatchOperationResponse
             # StopBatchOperation stops a batch operation

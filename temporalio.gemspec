@@ -36,7 +36,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'protobuf' # Ruby implementation of protobufs (for rbs_protobuf)
   spec.add_development_dependency 'pry' # Debugger
   spec.add_development_dependency 'rake' # rake tasks
-  spec.add_development_dependency 'rbs', '~> 3.1.0'
+  spec.add_development_dependency 'rbs', '~> 2.8.4'
   spec.add_development_dependency 'rbs_protobuf' # RBS generator for protobufs
   spec.add_development_dependency 'rspec' # specs
   spec.add_development_dependency 'rubocop' # linter
